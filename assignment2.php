@@ -6,6 +6,8 @@
  * user@host: php assignment2.php 2 10
  */
 
+// 2 possible methods, using pow or multiple sums like 5 to the power of 3 is ((5+5+5+5+5) = 25+25+25+25+25) = 125
+
 function easyPower($a, $b)
 {
     return pow($a, $b);
