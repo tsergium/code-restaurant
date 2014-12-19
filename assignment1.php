@@ -8,7 +8,6 @@
  * user@host: php assignment1.php 3 5 1000
  */
 
-// $argv[0] is '/path/to/wwwpublic/path/to/script.php'
 $firstNumber = $argv[1];
 $secondNumber = $argv[2];
 $maxNumber = $argv[3];
