@@ -3,6 +3,7 @@
     $sitePath = realpath(dirname(__FILE__)."/../");
     define ('__SITE_PATH', $sitePath);
 
+    require_once __SITE_PATH . '/application/traits/' . 'request.traits.php';
     require_once __SITE_PATH . '/application/' . 'controller_base.class.php';
     require_once __SITE_PATH . '/application/' . 'registry.class.php';
     require_once __SITE_PATH . '/application/' . 'router.class.php';
@@ -20,12 +21,12 @@
         include ($file);
     }
 
-    $registry = new registry;
-    
+    $registry = new Registry;
     $registry->db = Db::getInstance();
-    
-    $registry->router = new router($registry);
-    $registry->router->setPath(__SITE_PATH . '/controller');
     $registry->template = new template($registry);
+    
+    // set router
+    $registry->router = new Router($registry);
+    $registry->router->setPath(__SITE_PATH . '/controller');
     $registry->router->loader();
     
