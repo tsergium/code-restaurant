@@ -1,6 +1,6 @@
 <?php
 
-Class exampleController Extends baseController
+class exampleController extends Controller
 {
     
 	public function index()
