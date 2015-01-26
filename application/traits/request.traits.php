@@ -4,6 +4,36 @@ trait Request
     protected $_params;
     protected $_response;
     protected $_requestMethod;
+    protected $_errorCodes = array(
+        100 => array( // missing fields
+            'header'    => 'HTTP/1.1 400 Bad request',
+            'message'   => 'Error: required field(s) missing.'
+        ),
+        101 => array( // data not found
+            'header'    => 'HTTP/1.1 400 Bad request',
+            'message'   => 'Error: data not found.'
+        ),
+        102 => array( // operation could not be completed
+            'header'    => 'HTTP/1.1 400 Bad request',
+            'message'   => 'Error: data not found.'
+        ),        
+        200 => array( // success create
+            'header'    => 'HTTP/1.1 201 Created',
+            'message'   => 'Success: save was successful.'
+        ),
+        201 => array( // success update
+            'header'    => 'HTTP/1.1 201 Created',
+            'message'   => 'Success: update was successful.'
+        ),
+        202 => array( // success delete
+            'header'    => 'HTTP/1.1 200 OK',
+            'message'   => 'Success: delete was successful.'
+        ),
+        500 => array( // method not allowed
+            'header'    => 'HTTP/1.1 405 Method not allowed',
+            'message'   => 'Error: method not allowed.'
+        )
+    );
     
     /**
      * Fetch Params
@@ -16,7 +46,7 @@ trait Request
 		if ($this->_requestMethod == "PUT" || $this->_requestMethod == "DELETE")
 		{
 			parse_str(file_get_contents('php://input'), $this->_params);
-			$GLOBALS["_{$method}"] = $this->_params;
+			$GLOBALS["_{$this->_requestMethod}"] = $this->_params;
 			$_REQUEST = $this->_params + $_REQUEST;
 		}
 		else if($this->_requestMethod == "GET")
@@ -32,105 +62,13 @@ trait Request
 	}
     
     /**
-     * Read User Address
-     * @return boolean
+     * Error handling based on error codes
+     * @param int $code
      */
-    protected function requestGET()
+    protected function errorHandling($code)
     {
-        if(empty($this->_params['id']))
-        {
-            header('HTTP/1.1 400 Bad request');
-            $this->_response['response'] = 'Error: required field(s) missing.';
-        }
-        else
-        {
-            $address = new address();
-            if ($address->find($this->_params['id'])) {
-                $this->_response['street'] = $address->getStreet();
-                $this->_response['phone'] = $address->getPhone();
-                $this->_response['name'] = $address->getName();
-                return true;
-            }
-            else
-            {
-                $this->_response['response'] = 'Error: unable to find address.';
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Update User Address
-     */
-    protected function requestPOST()
-    {
-        if(empty($this->_params['id']))
-        {
-            header('HTTP/1.1 400 Bad request');
-            $this->_response['response'] = 'Error: required field(s) missing.';
-        }
-        else
-        {
-            $address = new address();
-            if($address->find($this->_params['id'])){
-                $address->setOptions($this->_params);
-                if($address->save())
-                {
-                    header('HTTP/1.1 201 Created');
-                    $this->_response['response'] = 'Success: update was successful.';
-                    return true;
-                }   
-            }else{
-                header('HTTP/1.1 400 Bad request');
-                $this->_response['response'] = 'Error: unable to update.';
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Create User Address
-     * @return boolean
-     */
-    protected function requestPUT()
-    {
-        if(empty($this->_params['street']) || empty($this->_params['phone']) || empty($this->_params['name']))
-        {
-            header('HTTP/1.1 400 Bad request');
-            $this->_response['response'] = 'Error: required field(s) missing.';
-        }
-        else
-        {
-            $address = new address();
-            $address->setOptions($this->_params);
-            if($address->save())
-            {
-                header('HTTP/1.1 201 Created');
-                $this->_response['response'] = 'Success: save was successful.';
-                return true;
-            }
-        }
-        return false;
-    }
-    /**
-     * Delete User Address
-     * @return boolean
-     */
-    protected function requestDELETE()
-    {
-        if (empty($this->_params['id'])) {
-            header('HTTP/1.1 400 Bad request');
-            $this->_response['response'] = 'Error: required field(s) missing.';
-        }else{
-            $address = new address();
-            if ($address->delete($this->_params['id'])) {
-                $this->_response['response'] = 'Success: delete was successful.';
-                return true;
-            } else {
-                $this->_response['response'] = 'Error: unable to delete.';
-            }
-        }
-        return false;
+        header($this->_errorCodes[$code]['header']);
+        $this->_response['response'] = $this->_errorCodes[$code]['message'];
     }
     
     /**
@@ -140,5 +78,18 @@ trait Request
     public function __toString()
     {
         return json_encode($this->_response);
+    }
+    
+    public function getRequestMethod()
+    {
+        $params = $this->getParams();
+        $method = 'request' . $this->_requestMethod;
+        
+        if(is_callable(array($this, $method))){
+            call_user_func_array(array($this,$method), array($params));
+        } else {
+            $this->errorHandling(100); // method not allowed
+        }
+        return $method;
     }
 }
