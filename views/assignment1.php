@@ -1,4 +1,5 @@
-<?php
+<pre>
+&lt;?php
 /**
  * find the sum of all the multiples of 3 or 5 below 1000 in an algorithmic approach
  * then do the same thing for 3 and 4
@@ -48,3 +49,4 @@ else
 {
     echo sumMultiplesOr($firstNumber, $secondNumber, $maxNumber);
 }
+</pre>

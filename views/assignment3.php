@@ -1,4 +1,5 @@
-<?php
+<pre>
+&lt;?php
 /**
  * Calculate and print 10 numbers for fibonacci series. Use recursion.
  * Extra: Create second algorithm for fibonacci but without recursion.
@@ -47,3 +48,4 @@ else
 {
     echo fibonacci($argv[1]);
 }
+</pre>
