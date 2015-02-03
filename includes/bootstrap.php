@@ -5,6 +5,7 @@
     define ('__SITE_PATH', $sitePath);
 
     require_once __SITE_PATH . '/application/traits/' . 'request.traits.php';
+    require_once __SITE_PATH . '/application/traits/' . 'csv.traits.php';
     
     spl_autoload_register(function($class)
     {

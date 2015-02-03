@@ -2,24 +2,18 @@
 
 class exampleController extends Controller
 {
-    
+	use Csv;
+
 	public function index()
 	{
-		$addresses = array();
-		$file = new SplFileObject(__SITE_PATH . "/example.csv");
-		$file->setFlags(SplFileObject::READ_CSV);
-		$iterator = new LimitIterator($file, 1);
+		$this->setFile();
+		$this->setFile(SplFileObject::READ_CSV);
+		$result = $this->parseResult();
 
-		foreach ($iterator as $key => $row)
-		{
-			if(!empty($row[0]) && !empty($row[1])  && !empty($row[2]))
-			{
-				list($addresses[$key]['name'],$addresses[$key]['phone'],$addresses[$key]['street']) = $row;
-			}
-		}
-		if($_GET['id'] && array_key_exists($_GET['id'], $addresses))
-		{
-			$addresses = $addresses[$_GET['id']];
+		if (isset($_GET['id']) && array_key_exists($_GET['id'], $result)) {
+			$addresses = $result[$_GET['id']];
+		} else {
+			$addresses = $result;
 		}
 
 		$this->registry->template->addresses = $addresses;
