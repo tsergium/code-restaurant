@@ -1,3 +1,5 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tsergium/code-restaurant/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tsergium/code-restaurant/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/tsergium/code-restaurant/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tsergium/code-restaurant/build-status/master)
 code-restaurant
 ===============
 
