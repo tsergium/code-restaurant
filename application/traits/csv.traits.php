@@ -2,6 +2,7 @@
 trait Csv
 {
     protected $_fileObject;
+    protected $_result;
 
     private function getIterator()
     {
@@ -9,12 +10,9 @@ trait Csv
         return $iterator;
     }
 
-    protected function setFile()
+    protected function setFile($file)
     {
-        /*
-         * ToDo: dynamic file; weird error on SplFileObject
-         */
-        $this->_fileObject = new SplFileObject(__SITE_PATH . DIRECTORY_SEPARATOR . 'example.csv');
+        $this->_fileObject = new SplFileObject($file);
         return $this;
     }
 
@@ -35,6 +33,22 @@ trait Csv
                 list($result[$key]['name'],$result[$key]['phone'],$result[$key]['street']) = $row;
             }
         }
-        return $result;
+        $this->_result = $result;
+        return $this;
+    }
+
+    protected function getResult()
+    {
+        $this->parseResult();
+        return $this->_result;
+    }
+
+    protected function lineExists($lineId)
+    {
+        if (array_key_exists($lineId, $this->_result)) {
+            return $this->_result[$lineId];
+        } else {
+            return false;
+        }
     }
 }

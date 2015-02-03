@@ -6,15 +6,12 @@ class exampleController extends Controller
 
 	public function index()
 	{
-		$this->setFile();
-		$this->setFile(SplFileObject::READ_CSV);
-		$result = $this->parseResult();
+		$this->setFile(__SITE_PATH . DIRECTORY_SEPARATOR . 'example.csv');
+		$this->setFlags(SplFileObject::READ_CSV);
+		$result = $this->getResult();
 
-		if (isset($_GET['id']) && array_key_exists($_GET['id'], $result)) {
-			$addresses = $result[$_GET['id']];
-		} else {
-			$addresses = $result;
-		}
+		$lineId = isset($_GET['id']) ? $_GET['id'] : 0;
+		$addresses = !empty($lineId) ? $this->lineExists($lineId) : $result;
 
 		$this->registry->template->addresses = $addresses;
 		$this->registry->template->show('example');
