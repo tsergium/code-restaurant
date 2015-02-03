@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Registry
+ * @property class Db
+ * @property class Template
+ * @property class Router
+ */
 class Registry
 {
     private $vars = array();
