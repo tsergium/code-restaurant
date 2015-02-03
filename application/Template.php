@@ -2,7 +2,6 @@
 
 class Template extends Router
 {
-	private $registry;
 	private $vars = array();
 
  	public function __set($index, $value)

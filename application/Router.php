@@ -2,11 +2,10 @@
 
 class Router
 {
-	private $registry;
 	private $path;
-	private $args = array();
 
 	public $file;
+	public $registry;
 	public $controller = 'index'; // index is default controller
 	public $action = 'index'; // index is default action
 
