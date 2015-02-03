@@ -2,9 +2,9 @@
 
 /**
  * Class Registry
- * @property class Db
- * @property class Template
- * @property class Router
+ * @property null|PDO db
+ * @property Template template
+ * @property Router router
  */
 class Registry
 {
