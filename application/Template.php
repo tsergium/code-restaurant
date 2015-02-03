@@ -5,10 +5,6 @@ class Template extends Router
 	private $registry;
 	private $vars = array();
 
-	function __construct($registry) {
-		$this->registry = $registry;
-	}
-
  	public function __set($index, $value)
  	{
 		$this->vars[$index] = $value;
@@ -20,7 +16,6 @@ class Template extends Router
 		if(file_exists($path) == false)
 		{
 			throw new Exception('No template found in path: '. $path);
-			return false;
 		}
 
 		foreach ($this->vars as $key => $value)
