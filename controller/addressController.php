@@ -3,31 +3,27 @@
 class addressController extends Controller
 {
     use Request;
-    
+
     /**
      * Read User Address
      * @return boolean
      */
     protected function requestGET()
     {
-        if(empty($this->_params['id']))
-        {
+        if(empty($this->_params['id'])) {
             $this->errorHandling(100); // missing fields
         }
-        else
-        {
-            $address = new Model_Address();
-            if ($address->find($this->_params['id'])) {
-                $this->_response['street'] = $address->getStreet();
-                $this->_response['phone'] = $address->getPhone();
-                $this->_response['name'] = $address->getName();
-                return true;
-            }
-            else
-            {
-                $this->errorHandling(101); // data not found
-            }
+
+        $address = new Model_Address();
+        if ($address->find($this->_params['id'])) {
+            $this->_response['street'] = $address->getStreet();
+            $this->_response['phone'] = $address->getPhone();
+            $this->_response['name'] = $address->getName();
+            return true;
+        } else {
+            $this->errorHandling(101); // data not found
         }
+
         return false;
     }
     
@@ -37,8 +33,8 @@ class addressController extends Controller
     protected function requestPOST()
     {
         // check required params
-        if(empty($this->_params['id']))
-        {
+        $required = ['id'];
+        if($this->checkRequired($required)) {
             $this->errorHandling(100); // missing fields
             return false;
         }
@@ -46,8 +42,7 @@ class addressController extends Controller
         $address = new Model_Address();
         if($address->find($this->_params['id'])){
             $address->setOptions($this->_params);
-            if($address->save())
-            {
+            if($address->save()) {
                 $this->errorHandling(201); // success update
                 return true;
             }
@@ -64,8 +59,8 @@ class addressController extends Controller
     protected function requestPUT()
     {
         // check required params
-        if(empty($this->_params['street']) || empty($this->_params['phone']) || empty($this->_params['name']))
-        {
+        $required = array('street', 'phone', 'name');
+        if($this->checkRequired($required)) {
             $this->errorHandling(100); // missing fields
             return false;
         }

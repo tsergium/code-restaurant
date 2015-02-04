@@ -34,7 +34,21 @@ trait Request
             'message'   => 'Error: method not allowed.'
         )
     );
-    
+
+    /**
+     * @param array $params
+     * @return bool
+     */
+    protected function checkRequired(array $params)
+    {
+        foreach($params as $param) {
+            if(empty($this->_params[$param])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Fetch Params
      * @return array
