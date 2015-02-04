@@ -65,7 +65,6 @@ class Model_Address
     public function find($id)
     {
         $db = db::getInstance();
-
         $statement = $db->query("SELECT `id`, `street`, `phone`, `name` FROM `address` WHERE `id` = '{$id}' LIMIT 1 ");
         $statement->setFetchMode(PDO::FETCH_ASSOC);
         $row = $statement->fetch();
@@ -73,7 +72,6 @@ class Model_Address
         if(!$row){
             return false;
         }
-
         $this->setOptions($row);
 
         return $this;
@@ -81,41 +79,21 @@ class Model_Address
 
     public function save()
     {
+        $db = db::getInstance();
+        $options = array(
+            ':street'   => $this->_street,
+            ':phone'    => $this->_phone,
+            ':name'     => $this->_name
+        );
         if($this->_id) {
-            $result = $this->update();
+            $options[':id'] = $this->_id;
+            $statement = $db->prepare("UPDATE `address` SET `street` = :street, `phone` = :phone, `name` = :name WHERE `id` = :id");
         } else {
-            $result = $this->insert();
+            $statement = $db->prepare("INSERT INTO `address` ( `street`, `phone`, `name` ) VALUES ( :street, :phone, :name )");
         }
+        $result = $statement->execute($options);
 
         return $result;
-    }
-
-    private function update()
-    {
-        $db = db::getInstance();
-        $options = array(
-            'id'        => $this->_id,
-            ':street'   => $this->_street,
-            ':phone'    => $this->_phone,
-            ':name'     => $this->_name
-        );
-        $sql = "UPDATE `address` SET `street` = :street, `phone` = :phone, `name` = :name WHERE `id` = :id";
-        $statement = $db->prepare($sql);
-        return $statement->execute($options);
-    }
-
-    private function insert()
-    {
-        $db = db::getInstance();
-        $options = array(
-            ':street'   => $this->_street,
-            ':phone'    => $this->_phone,
-            ':name'     => $this->_name
-        );
-        $options[':id'] = $this->_id;
-        $sql = "INSERT INTO `address` ( `street`, `phone`, `name` ) VALUES ( :street, :phone, :name )";
-        $statement = $db->prepare($sql);
-        return $statement->execute($options);
     }
 
     public function delete($id)
