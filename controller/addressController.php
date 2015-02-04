@@ -36,25 +36,25 @@ class addressController extends Controller
      */
     protected function requestPOST()
     {
+        // check required params
         if(empty($this->_params['id']))
         {
             $this->errorHandling(100); // missing fields
+            return false;
         }
-        else
-        {
-            $address = new Model_Address();
-            if($address->find($this->_params['id'])){
-                $address->setOptions($this->_params);
-                if($address->save())
-                {
-                    $this->errorHandling(201); // success update
-                    return true;
-                }   
-            }else{
-                $this->errorHandling(101); // data not found
+
+        $address = new Model_Address();
+        if($address->find($this->_params['id'])){
+            $address->setOptions($this->_params);
+            if($address->save())
+            {
+                $this->errorHandling(201); // success update
+                return true;
             }
+        }else{
+            $this->errorHandling(101); // data not found
+            return false;
         }
-        return false;
     }
     
     /**
@@ -63,21 +63,23 @@ class addressController extends Controller
      */
     protected function requestPUT()
     {
+        // check required params
         if(empty($this->_params['street']) || empty($this->_params['phone']) || empty($this->_params['name']))
         {
             $this->errorHandling(100); // missing fields
+            return false;
         }
-        else
+
+        $address = new Model_Address();
+        $address->setOptions($this->_params);
+        if($address->save())
         {
-            $address = new Model_Address();
-            $address->setOptions($this->_params);
-            if($address->save())
-            {
-                $this->errorHandling(200); // success create
-                return true;
-            }
+            $this->errorHandling(200); // success create
+            return true;
+        } else {
+            $this->errorHandling(102); // operation could not be completed
+            return false;
         }
-        return false;
     }
     /**
      * Delete User Address
