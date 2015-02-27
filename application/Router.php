@@ -9,12 +9,12 @@ class Router
 	public $controller = 'index'; // index is default controller
 	public $action = 'index'; // index is default action
 
-	function __construct(Registry $registry)
+	public function __construct(Registry $registry)
 	{
 		$this->registry = $registry;
 	}
 
-	function setPath($path)
+	public function setPath($path)
 	{
 		if (is_dir($path) == false)
 		{
