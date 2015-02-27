@@ -100,7 +100,8 @@ trait Request
         $method = 'request' . $this->_requestMethod;
         
         if(is_callable(array($this, $method))){
-            call_user_func_array(array($this,$method), array($params));
+            $address = new Model_Address();
+            call_user_func_array(array($this,$method), array($address, $params));
         } else {
             $this->errorHandling(100); // method not allowed
         }

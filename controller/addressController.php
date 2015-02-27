@@ -6,15 +6,15 @@ class addressController extends Controller
 
     /**
      * Read User Address
-     * @return boolean
+     * @param Model_Address $address
+     * @return bool
      */
-    protected function requestGET()
+    protected function requestGET(Model_Address $address)
     {
         if(empty($this->_params['id'])) {
             $this->errorHandling(100); // missing fields
         }
 
-        $address = new Model_Address();
         if ($address->find($this->_params['id'])) {
             $this->_response['street'] = $address->getStreet();
             $this->_response['phone'] = $address->getPhone();
@@ -26,11 +26,13 @@ class addressController extends Controller
 
         return false;
     }
-    
+
     /**
      * Update User Address
+     * @param Model_Address $address
+     * @return bool
      */
-    protected function requestPOST()
+    protected function requestPOST(Model_Address $address)
     {
         // check required params
         $required = ['id'];
@@ -39,7 +41,6 @@ class addressController extends Controller
             return false;
         }
 
-        $address = new Model_Address();
         if($address->find($this->_params['id'])){
             $address->setOptions($this->_params);
             if($address->save()) {
@@ -51,12 +52,13 @@ class addressController extends Controller
             return false;
         }
     }
-    
+
     /**
      * Create User Address
-     * @return boolean
+     * @param Model_Address $address
+     * @return bool
      */
-    protected function requestPUT()
+    protected function requestPUT(Model_Address $address)
     {
         // check required params
         $required = array('street', 'phone', 'name');
@@ -65,7 +67,6 @@ class addressController extends Controller
             return false;
         }
 
-        $address = new Model_Address();
         $address->setOptions($this->_params);
         if($address->save())
         {
@@ -76,16 +77,17 @@ class addressController extends Controller
             return false;
         }
     }
+
     /**
      * Delete User Address
-     * @return boolean
+     * @param Model_Address $address
+     * @return bool
      */
-    protected function requestDELETE()
+    protected function requestDELETE(Model_Address $address)
     {
         if (empty($this->_params['id'])) {
             $this->errorHandling(100); // missing fields
         }else{
-            $address = new Model_Address();
             if ($address->delete($this->_params['id'])) {
                 $this->errorHandling(202); // success delete
                 return true;
