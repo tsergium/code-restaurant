@@ -9,7 +9,7 @@ class Template extends Router
 		$this->vars[$index] = $value;
 	}
 
-	function show($name) {
+	public function show($name) {
 		$path = __SITE_PATH . '/views' . '/' . $name . '.php';
 
 		if(file_exists($path) == false)
