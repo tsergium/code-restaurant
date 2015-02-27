@@ -19,7 +19,6 @@ class addressController extends Controller
             $this->_response['street'] = $address->getStreet();
             $this->_response['phone'] = $address->getPhone();
             $this->_response['name'] = $address->getName();
-            return true;
         } else {
             $this->errorHandling(101); // data not found
         }
@@ -45,7 +44,6 @@ class addressController extends Controller
             $address->setOptions($this->_params);
             if($address->save()) {
                 $this->errorHandling(201); // success update
-                return true;
             }
         }else{
             $this->errorHandling(101); // data not found
@@ -71,7 +69,6 @@ class addressController extends Controller
         if($address->save())
         {
             $this->errorHandling(200); // success create
-            return true;
         } else {
             $this->errorHandling(102); // operation could not be completed
             return false;
@@ -90,7 +87,6 @@ class addressController extends Controller
         }else{
             if ($address->delete($this->_params['id'])) {
                 $this->errorHandling(202); // success delete
-                return true;
             } else {
                 $this->errorHandling(101); // data not found
             }
