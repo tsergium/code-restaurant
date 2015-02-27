@@ -24,5 +24,3 @@ class Template extends Router
 		include ($path);
 	}
 }
-
-?>
