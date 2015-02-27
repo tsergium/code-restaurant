@@ -5,7 +5,7 @@ abstract class Controller
 
 	protected $registry;
 
-	function __construct($registry)
+	public function __construct($registry)
     {
 		$this->registry = $registry;
 	}
