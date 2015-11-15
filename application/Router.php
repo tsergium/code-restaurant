@@ -16,7 +16,7 @@ class Router
 
 	public function setPath($path)
 	{
-		if (is_dir($path) == false)
+		if (is_dir($path) === false)
 		{
 			throw new Exception ('Invalid controller path: `' . $path . '`');
 		}
@@ -25,7 +25,7 @@ class Router
 
 	private function checkIfReadable()
 	{
-		if(is_readable($this->file) == false)
+		if(is_readable($this->file) === false)
 		{
 			$this->file = $this->path.'/errorController.php';
 			$this->controller = 'error';
@@ -42,7 +42,7 @@ class Router
 		$class = $this->controller . 'Controller';
 		$controller = new $class($this->registry);
 
-		if (is_callable(array($controller, $this->action)) == false)
+		if (is_callable(array($controller, $this->action)) === false)
 		{
 			$action = 'index';
 		}
