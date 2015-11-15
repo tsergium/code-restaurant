@@ -1,5 +1,5 @@
 <?php
-class Model_Address
+class address
 {
     protected $_id;
     protected $_street;
@@ -65,13 +65,16 @@ class Model_Address
     public function find($id)
     {
         $db = db::getInstance();
+
         $statement = $db->query("SELECT `id`, `street`, `phone`, `name` FROM `address` WHERE `id` = '{$id}' LIMIT 1 ");
         $statement->setFetchMode(PDO::FETCH_ASSOC);
         $row = $statement->fetch();
 
-        if(!$row){
-            return false;
+        if(count($row) == 0)
+        {
+            return;
         }
+
         $this->setOptions($row);
 
         return $this;
@@ -85,12 +88,16 @@ class Model_Address
             ':phone'    => $this->_phone,
             ':name'     => $this->_name
         );
-        if($this->_id) {
+        if($this->_id)
+        {
             $options[':id'] = $this->_id;
             $statement = $db->prepare("UPDATE `address` SET `street` = :street, `phone` = :phone, `name` = :name WHERE `id` = :id");
-        } else {
+        }
+        else
+        {
             $statement = $db->prepare("INSERT INTO `address` ( `street`, `phone`, `name` ) VALUES ( :street, :phone, :name )");
         }
+
         $result = $statement->execute($options);
 
         return $result;

@@ -1,20 +1,22 @@
 <?php
 
-class Router
+class router
 {
+
+	private $registry;
 	private $path;
+	private $args = array();
 
 	public $file;
-	public $registry;
-	public $controller = 'index'; // index is default controller
-	public $action = 'index'; // index is default action
+	public $controller;
+	public $action;
 
-	public function __construct(Registry $registry)
+	function __construct($registry)
 	{
 		$this->registry = $registry;
 	}
 
-	public function setPath($path)
+	function setPath($path)
 	{
 		if (is_dir($path) == false)
 		{
@@ -23,20 +25,16 @@ class Router
 		$this->path = $path;
 	}
 
-	private function checkIfReadable()
-	{
+ 	public function loader()
+ 	{
+		$this->getController();
+
 		if(is_readable($this->file) == false)
 		{
 			$this->file = $this->path.'/errorController.php';
 			$this->controller = 'error';
 		}
-	}
 
- 	public function loader()
- 	{
-		$this->getController();
-		$this->checkIfReadable();
-        
 		include $this->file;
 
 		$class = $this->controller . 'Controller';
@@ -53,23 +51,32 @@ class Router
 		$controller->$action();
  	}
 
-	private function parseRoute($route)
-	{
-		$parts = explode('/', $route);
-		$this->controller = $parts[0];
-		if(isset( $parts[1])){
-			$this->action = $parts[1];
-		}else{
-			$this->action = 'index';
-		}
-	}
-
 	private function getController()
 	{
 		$route = (empty($_GET['rt'])) ? '' : $_GET['rt'];
-		if(!empty($route) && $route != 'index.php')
+
+		if(empty($route))
 		{
-			$this->parseRoute($route);
+			$route = 'index';
+		}
+		else
+		{
+			$parts = explode('/', $route);
+			$this->controller = $parts[0];
+			if(isset( $parts[1]))
+			{
+				$this->action = $parts[1];
+			}
+		}
+
+		if (empty($this->controller))
+		{
+			$this->controller = 'index';
+		}
+
+		if (empty($this->action))
+		{
+			$this->action = 'index';
 		}
 
 		$this->file = $this->path .'/'. $this->controller . 'Controller.php';

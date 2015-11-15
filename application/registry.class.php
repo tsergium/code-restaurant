@@ -1,12 +1,6 @@
 <?php
 
-/**
- * Class Registry
- * @property null|PDO db
- * @property Template template
- * @property Router router
- */
-class Registry
+Class Registry
 {
     private $vars = array();
 
