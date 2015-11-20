@@ -12,7 +12,7 @@ class Template extends Router
 	public function show($name) {
 		$path = __SITE_PATH . '/views' . '/' . $name . '.php';
 
-		if(file_exists($path) == false)
+		if(file_exists($path) === false)
 		{
 			throw new Exception('No template found in path: '. $path);
 		}
