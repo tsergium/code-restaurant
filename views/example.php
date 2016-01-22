@@ -1,1 +1,2 @@
-<?php echo json_encode($addresses) ?>
+<?php
+echo json_encode($addresses);
